@@ -12,7 +12,9 @@
 /* Corporate Design Projektmodul III: Creme Grund, Orange und Rosa, schräge Titelbalken */
 :root{
   --creme:#F2ECE1; --creme-2:#E9E0D0; --orange:#DE5A27; --orange-dk:#B8441A; --rosa:#E66FA8;
-  --ink:#2B211C; --ink-2:#6B5A50; --white:#FFFFFF; --line:#D9CCB8;
+  --ink:#2B211C;
+  /* Sekundärfarben laut Doku (Corporate Design Seite 28) */
+  --orange-hell:#E98661; --rosa-hell:#EA9FC5; --blau:#88C1D8; --lila:#B488BC; --gruen:#CEE1A7; --ink-2:#6B5A50; --white:#FFFFFF; --line:#D9CCB8;
   --head:"Brevia","Nunito","Arial Rounded MT Bold",system-ui,sans-serif;
   --body:"Open Sans",system-ui,-apple-system,"Segoe UI",Arial,sans-serif;
   color-scheme:light;
@@ -83,7 +85,7 @@ html,body{overflow-x:clip}
 /* Wortwolke */
 .cloud{position:absolute;inset:0;overflow:hidden}
 .w{position:absolute;white-space:nowrap;font-family:var(--head);font-weight:900;line-height:1;cursor:default;transition:left .6s cubic-bezier(.2,.8,.2,1),top .6s cubic-bezier(.2,.8,.2,1),font-size .6s cubic-bezier(.2,.8,.2,1),opacity .4s;user-select:none}
-.w.c0{color:var(--orange)} .w.c1{color:var(--rosa)} .w.c2{color:var(--ink)}
+.w.c0{color:var(--orange)} .w.c1{color:var(--rosa)} .w.c2{color:var(--blau)} .w.c3{color:var(--lila)} .w.c4{color:var(--orange-hell)} .w.c5{color:var(--rosa-hell)} .w.c6{color:var(--gruen)}
 .w.new{animation:pop .7s ease-out}
 @keyframes pop{0%{opacity:0;transform:scale(.4)}60%{opacity:1;transform:scale(1.12)}100%{transform:scale(1)}}
 .host-mod .w{cursor:pointer}
@@ -487,9 +489,10 @@ function startHost(code){
     words.forEach((w, i) => {
       const p = placed[i]; if (!p) return; keep.add(w.key);
       let n = nodes.get(w.key);
-      if (!n) { n = el("span", { class: "w c" + (hash(w.key) % 3), title: "", onclick: () => askHide(w.key) }); nodes.set(w.key, n); cloudEl.append(n); n.style.left = (p.x + p.w/2) + "px"; n.style.top = (p.y + p.h/2) + "px"; n.style.fontSize = "1px"; n.classList.add("new"); requestAnimationFrame(() => setPos(n, p)); }
+      if (!n) { n = el("span", { class: "w", title: "", onclick: () => askHide(w.key) }); nodes.set(w.key, n); cloudEl.append(n); n.style.left = (p.x + p.w/2) + "px"; n.style.top = (p.y + p.h/2) + "px"; n.style.fontSize = "1px"; n.classList.add("new"); requestAnimationFrame(() => setPos(n, p)); }
       else { if (fresh.has(w.key)) { n.classList.remove("new"); void n.offsetWidth; n.classList.add("new"); } setPos(n, p); }
       n.textContent = w.label; n.title = w.n + "×";
+      n.classList.remove("c0","c1","c2","c3","c4","c5","c6"); n.classList.add("c" + (i < 2 ? i : hash(w.key) % 7));
     });
     fresh.clear();
     for (const [k, n] of nodes) if (!keep.has(k)) { n.remove(); nodes.delete(k); }
