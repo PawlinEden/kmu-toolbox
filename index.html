@@ -26,9 +26,11 @@ h1,h2,h3{font-family:var(--head);font-weight:900;line-height:1.1;margin:0;text-w
 :focus-visible{outline:3px solid var(--rosa);outline-offset:2px}
 
 /* schräge Titelbalken wie auf dem Doku Cover */
-.bars{position:relative;display:inline-flex;flex-direction:column;align-items:flex-start;transform:rotate(-3deg);transform-origin:left center}
-.bar{background:var(--orange);color:var(--white);font-family:var(--head);font-weight:900;padding:.18em .7em .22em;line-height:1.05}
-.bar.rosa{background:var(--rosa);font-size:.5em;margin-top:-.05em;margin-left:.2em;padding:.25em .7em}
+/* Balken laufen links aus dem Bild, die Kante am Rand ist dadurch senkrecht */
+html,body{overflow-x:clip}
+.bars{--indent:16px;position:relative;display:inline-flex;flex-direction:column;align-items:flex-start;transform:rotate(-3deg);transform-origin:left center}
+.bar{background:var(--orange);color:var(--white);font-family:var(--head);font-weight:900;margin-left:-60px;padding:.18em .7em .22em calc(60px + var(--indent));line-height:1.05}
+.bar.rosa{background:var(--rosa);font-size:.5em;margin-top:-.05em;padding:.25em .7em .25em calc(60px + var(--indent))}
 
 .btn{display:inline-flex;align-items:center;justify-content:center;gap:.5em;border:0;border-radius:4px;background:var(--orange);color:var(--white);font-weight:700;padding:.75em 1.2em;cursor:pointer;text-decoration:none;min-height:48px}
 .btn:hover{background:var(--orange-dk)}
@@ -49,7 +51,7 @@ h1,h2,h3{font-family:var(--head);font-weight:900;line-height:1.1;margin:0;text-w
 
 /* ---------- Start ---------- */
 #start{min-height:100%;display:flex;flex-direction:column;padding-block:8vh 32px}
-#start .hero{font-size:clamp(2.6rem,9vw,5.5rem);margin-left:-.3em}
+#start .hero{font-size:clamp(2.6rem,9vw,5.5rem);--indent:max(16px,calc((100vw - 980px) / 2 + 16px))}
 #start .wrap{padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));max-width:980px;width:100%;margin:0 auto}
 #start .intro{max-width:60ch;margin:2.5rem 0 2rem;font-size:1.1rem}
 .choices{display:grid;grid-template-columns:repeat(auto-fit,minmax(260px,1fr));gap:20px}
@@ -66,8 +68,8 @@ h1,h2,h3{font-family:var(--head);font-weight:900;line-height:1.1;margin:0;text-w
 .h-top{display:flex;align-items:flex-start;justify-content:space-between;gap:24px;padding:28px 32px 8px 0}
 .h-top .bars{margin-top:clamp(28px,3.4vw,60px)}
 .h-title{font-size:clamp(1.6rem,3.4vw,3.2rem);max-width:70vw}
-.h-title .bar{padding-left:1.2em}
-.h-title .bar.rosa{font-size:.42em;margin-left:1.6em}
+.h-title{--indent:clamp(24px,3vw,56px)}
+.h-title .bar.rosa{font-size:.42em}
 .joinbox{display:flex;gap:16px;align-items:center;background:var(--white);border-radius:6px;padding:12px 16px;flex-shrink:0}
 .joinbox .qr{width:clamp(96px,11vw,170px);aspect-ratio:1;max-width:100%}
 .joinbox .qr svg{width:100%;height:100%;display:block}
@@ -176,8 +178,8 @@ body.clean .h-bar:hover{opacity:1}
 
 <!-- ================= START ================= -->
 <section id="start" hidden>
+  <div><div class="bars hero"><span class="bar">Agenda Wolke</span><span class="bar rosa">Netzwerk Toolbox für KMU Meetings</span></div></div>
   <div class="wrap">
-    <div class="bars hero"><span class="bar">Agenda Wolke</span><span class="bar rosa">Netzwerk Toolbox für KMU Meetings</span></div>
     <p class="intro">Alle sammeln per Handy, was heute besprochen werden soll. Die Begriffe erscheinen live am Beamer, häufig genannte werden größer. Danach bringen alle die Themen in eine Reihenfolge, und daraus entsteht die Agenda.</p>
     <div class="choices">
       <div class="choice">
@@ -242,8 +244,7 @@ body.clean .h-bar:hover{opacity:1}
           <div class="tlist" id="hTopics"></div>
         </div>
         <div>
-          <div class="bigstat"><span id="hRanked">0</span><small> Reihenfolgen eingegangen</small></div>
-          <p id="hBoostLine" style="font-size:1.2rem;margin:20px 0"><b id="hBoosts">0</b> × „Mein Punkt ist auch wichtig“ genutzt</p>
+          <div class="bigstat" style="margin-bottom:24px"><span id="hRanked">0</span><small> Reihenfolgen eingegangen</small></div>
           <button class="btn" id="btnShowAgenda" type="button">Agenda zeigen</button>
         </div>
       </div>
@@ -281,7 +282,6 @@ body.clean .h-bar:hover{opacity:1}
     <h3>Einstellungen</h3>
     <label><span class="label">Frage für die Wortwolke</span><input class="field" id="setQuestion" maxlength="90"></label>
     <label><span class="label">Begriffe pro Person</span><input class="field" id="setMax" type="number" min="1" max="20"></label>
-    <label class="toggle"><input type="checkbox" id="setBoost"> „Mein Punkt ist auch wichtig“ anbieten (jede Person kann einmal einen Punkt nach vorne holen)</label>
     <label class="toggle"><input type="checkbox" id="setClean"> Steuerleiste ausblenden, bis die Maus darüber ist</label>
     <div class="row">
       <button class="btn ghost" type="button" id="btnReset">Neue Runde mit neuem Code</button>
@@ -407,7 +407,7 @@ function hostUrl(code){ const u = new URL(location.href); u.search = ""; u.searc
 /* ================== Beamer ================== */
 function newState(code){
   return { v:1, code, round: rid(6), broker: 0, phase:"cloud", question:"Was sollen wir heute besprechen?",
-    maxWords: 3, boostOn: true, words: {}, hidden: {}, used: {}, people: {}, seen: [],
+    maxWords: 3, boostOn: false, words: {}, hidden: {}, used: {}, people: {}, seen: [],
     topics: [], picked: {}, ranks: {}, boosts: {} };
 }
 
@@ -416,6 +416,7 @@ function startHost(code){
   $("host").hidden = false;
   let S = store.get("aw:host:" + code);
   if (!S || S.code !== code) S = newState(code);
+  S.boostOn = false; // „Mein Punkt ist auch wichtig“ ist entfernt
   store.set("aw:lastHost", code);
   if (store.get("aw:clean")) document.body.classList.add("clean");
   let conn, pubTimer = null;
@@ -571,7 +572,7 @@ function startHost(code){
   });
   $("btnFull").onclick = () => { const d = document.documentElement; (document.fullscreenElement ? document.exitFullscreen() : d.requestFullscreen?.())?.catch?.(() => {}); };
   $("btnSettings").onclick = () => {
-    $("setQuestion").value = S.question; $("setMax").value = S.maxWords; $("setBoost").checked = S.boostOn; $("setClean").checked = document.body.classList.contains("clean");
+    $("setQuestion").value = S.question; $("setMax").value = S.maxWords; $("setClean").checked = document.body.classList.contains("clean");
     $("dlgSettings").hidden = false;
   };
   $("btnCloseSettings").onclick = () => $("dlgSettings").hidden = true;
@@ -579,7 +580,6 @@ function startHost(code){
     e.preventDefault();
     S.question = clean($("setQuestion").value, 90) || S.question;
     S.maxWords = Math.min(20, Math.max(1, parseInt($("setMax").value, 10) || 3));
-    S.boostOn = $("setBoost").checked;
     document.body.classList.toggle("clean", $("setClean").checked); store.set("aw:clean", $("setClean").checked);
     $("dlgSettings").hidden = true; changed();
   };
@@ -606,7 +606,6 @@ function startHost(code){
     if (ph === "rank") {
       $("hTopics").replaceChildren(...S.topics.map((t) => el("span", { class:"tchip", text:t.label })));
       $("hRanked").textContent = Object.keys(S.ranks).length;
-      $("hBoosts").textContent = Object.keys(S.boosts).length; $("hBoostLine").hidden = !S.boostOn;
     }
     if (ph === "result") {
       const ag = agenda(); const box = $("hAgenda");

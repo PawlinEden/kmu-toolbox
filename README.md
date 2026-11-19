@@ -6,7 +6,7 @@ Eine kostenlose Web App, um die Agenda eines Meetings gemeinsam zu gestalten:
 
 1. **Begriffe sammeln:** Alle scannen am Beamer den QR Code und geben auf dem Handy Begriffe ein. Die Wortwolke am Beamer aktualisiert sich live, häufig genannte Begriffe werden größer.
 2. **Themen wählen:** Die Moderation übernimmt die wichtigsten Begriffe als Themen und kann eigene ergänzen.
-3. **Ranking:** Alle bringen die Themen auf dem Handy in ihre Reihenfolge. Optional kann jede Person einmal einen Punkt nach vorne holen („Mein Punkt ist auch wichtig“).
+3. **Ranking:** Alle bringen die Themen auf dem Handy in ihre Reihenfolge. Daraus ergibt sich die gemeinsame Reihenfolge.
 4. **Agenda:** Der Beamer zeigt die gemeinsame Reihenfolge.
 
 ## Benutzung
@@ -14,7 +14,7 @@ Eine kostenlose Web App, um die Agenda eines Meetings gemeinsam zu gestalten:
 * Laptop am Beamer: Seite öffnen, „Neue Runde starten“, dann unten durch die Schritte 1 bis 4 klicken.
 * Teilnehmende: QR Code scannen. Kein Konto und keine Installation nötig.
 * Einen Begriff ausblenden: in der Wortwolke auf den Begriff klicken.
-* Einstellungen: Frage ändern, Begriffe pro Person, „Mein Punkt ist auch wichtig“ an oder aus.
+* Einstellungen: Frage ändern, Begriffe pro Person.
 
 ## Technik
 
